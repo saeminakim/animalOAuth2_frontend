@@ -1,0 +1,76 @@
+<html>
+
+<body>
+  redirect
+</body>
+
+<script src="common.js?t=1"></script>
+<script>
+  // 환경변수 설정
+  const ENV = getEnvironment();
+
+  console.log(getParameterByName("code"));
+
+  const grantType = "authorization_code";
+  const clientId = "0c1e9fde3a67eb6041ffaec00820db59";
+  const redirectUri = getKakaoRedirectUrl(ENV);
+  const code = getParameterByName("code");
+  const clientSecret = "aRiXoIKtyCfrFJDyLp6MuSD8bbYrQ4Ia";
+
+  let requestData = `grant_type=${grantType}&client_id=${clientId}`;
+  requestData += `&redirect_uri=${redirectUri}&code=${code}`;
+  requestData += `&client_secret=${clientSecret}`;
+
+  console.log(requestData);
+
+  let url = "https://kauth.kakao.com/oauth/token";
+
+  // GET
+  // fetch(url)
+
+  // 액세스 토큰을 받아오기
+  fetch(url, {
+    method: 'POST',
+    body: requestData,
+    headers: {
+      'Content-type': 'application/x-www-form-urlencoded;charset=utf-8'
+    }
+  })
+    .then(res => res.json())
+    .then(data => {
+
+      console.log(data);
+      auth(data.access_token);
+    })
+
+  // 액세스토큰 검증 및 세션 Id 조회
+  function auth(accessToken) {
+    const url = `${getAuthBaseUrl(ENV)}/kakao/validate`
+
+    fetch(url, {
+      method: "POST",
+      body: accessToken
+    })
+      .then(res => res.text())
+      .then(sessionId => {
+        // 현재: 세션Id를 조회해서 저장하는 것
+        console.log(sessionId);
+
+        // 세션Id를 쿠키에 저장하고
+        // createCookie("sid", sessionId, getCookieDomain(ENV), 60*60*24);
+        createCookie("sid", sessionId, "", 60 * 60 * 24);
+        console.log(getCookie("sid"));
+
+        // 돌아갈 url로 이동
+        const returnUrl = getCookie("url");
+        console.log("returnUrl");
+        console.log(returnUrl);
+
+        removeCookie("url");
+        window.location.href = returnUrl;
+      })
+  }
+
+</script>
+
+</html>

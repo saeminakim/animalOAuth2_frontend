@@ -1,0 +1,49 @@
+<html>
+
+<body>
+  <img src="kakao_login_medium_narrow.png" alt="카카오로그인" style="cursor:pointer">
+
+  <script src="common.js?t=1"></script>
+  <script>
+    // 환경변수 설정
+    const ENV = getEnvironment();
+
+    document.querySelector("img")
+      .addEventListener("click", kakaoLogin)
+
+    // http://..../signin.html?url=돌아갈url
+
+    // 이미 세션이 있으면 url 페이지로 돌아가기
+    if (getCookie("sid")) {
+      alert(getParameterByName("url"));
+      window.location.href = getParameterByName("url");
+
+    } else {
+      // 인증 처리 후 되돌아갈 주소를 쿠키에 저장
+      alert(getParameterByName("url"));
+      createCookie("url", getParameterByName("url"), "", 60 * 60 * 1);
+      // createCookie("url", getParameterByName("url"), getCookieDomain(ENV), 60*60*1);                      
+    }
+
+    function kakaoLogin() {
+      // REST API 키
+      const clientId = "0c1e9fde3a67eb6041ffaec00820db59";
+      // 카카오 로그인에 등록한 redirect url를 등록
+      const redirectUri = getKakaoRedirectUrl(ENV);
+      console.log("----redirectUri----");
+      console.log(redirectUri);
+
+      let url = "https://kauth.kakao.com/oauth/authorize";
+      url += `?client_id=${clientId}&redirect_uri=${redirectUri}`;
+      url += "&response_type=code";
+      // // 변경되거나 추가적인 동의항목
+      // url += "&scope=account_email,profile"; 
+
+      // 브라우저를 인가코드 요청 주소로 이동 
+      // 인증 사업자의 로그인 화면으로 이동됨
+      window.location.href = url;
+    }
+  </script>
+</body>
+
+</html>
