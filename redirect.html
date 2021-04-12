@@ -1,7 +1,7 @@
 <html>
 
 <body>
-  redirect
+  redirecting...
 </body>
 
 <script src="common.js?t=1"></script>
@@ -21,6 +21,7 @@
   requestData += `&redirect_uri=${redirectUri}&code=${code}`;
   requestData += `&client_secret=${clientSecret}`;
 
+  console.log("requestData");
   console.log(requestData);
 
   let url = "https://kauth.kakao.com/oauth/token";
