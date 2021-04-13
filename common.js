@@ -38,7 +38,7 @@ function getKakaoRedirectUrl(env) {
 function getAuthBaseUrl(env) {
   return env == "dev"
     ? "http://localhost:7070"
-    : "http://ec2-13-124-190-225.ap-northeast-2.compute.amazonaws.com:7070";
+    : "http://ec2-52-79-227-47.ap-northeast-2.compute.amazonaws.com:7070";
 }
 
 function getEnvironment() {
